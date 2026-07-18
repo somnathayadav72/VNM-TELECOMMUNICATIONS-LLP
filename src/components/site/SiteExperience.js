@@ -27,7 +27,7 @@ function SectionIntro({ eyebrow, title, copy, dark = false }) {
 }
 
 function BrandLockup({ dark = false }) {
-  return <div className="brand-lockup"><Image src={dark ? "/brand/vnm-telecommunications-mark.svg" : "/brand/vnm-telecommunications-lockup-dark.svg"} alt={site.name} width={dark ? 30 : 220} height={dark ? 30 : 32} className={dark ? "brand-lockup__mark" : "brand-lockup__wide"} /></div>;
+  return <div className="brand-lockup"><Image src={dark ? "/brand/vnm-telecommunications-mark.png" : "/brand/vnm-telecommunications-lockup-dark.svg"} alt={site.name} width={dark ? 30 : 220} height={dark ? 30 : 32} className={dark ? "brand-lockup__mark" : "brand-lockup__wide"} /></div>;
 }
 
 function Navbar() {
@@ -52,12 +52,12 @@ function Navbar() {
   const links = [{ label: "Stock", href: "#stock" }, { label: "Categories", href: "#categories" }, { label: "Grading", href: "#grading" }, { label: "Logistics", href: "#logistics" }, { label: "Company", href: "#company" }];
   return <>
     <header className={`site-nav ${scrolled ? "site-nav--scrolled" : ""}`}>
-      <a className="site-nav__brand" href="#top" aria-label="VNM Telecommunications home"><Image src="/brand/vnm-telecommunications-mark.svg" alt="" width={29} height={29} /><span>VNM <b>TELECOM</b></span></a>
+      <a className="site-nav__brand" href="#top" aria-label="VNM Telecommunications home"><Image src="/brand/vnm-telecommunications-mark.png" alt="" width={29} height={29} /><span>VNM <b>TELECOM</b></span></a>
       <nav className="site-nav__links" aria-label="Primary navigation">{links.map((link) => <a key={link.href} href={link.href}>{link.label}</a>)}</nav>
       <a className="button button--nav" href="#contact">Request stock list <ArrowUpRight size={15} /></a>
       <button ref={triggerRef} className="menu-trigger" type="button" onClick={() => setOpen(true)} aria-label="Open navigation menu" aria-expanded={open}><Menu size={21} /></button>
     </header>
-    <AnimatePresence>{open && <motion.div className="mobile-menu" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}><div className="mobile-menu__top"><a className="site-nav__brand" href="#top" onClick={() => setOpen(false)}><Image src="/brand/vnm-telecommunications-mark.svg" alt="" width={29} height={29} /><span>VNM <b>TELECOM</b></span></a><button className="menu-trigger menu-trigger--close" type="button" onClick={() => { setOpen(false); triggerRef.current?.focus(); }} aria-label="Close navigation menu"><X size={24} /></button></div><nav aria-label="Mobile navigation">{links.map((link, index) => <motion.a key={link.href} href={link.href} onClick={() => setOpen(false)} initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: index * 0.05, ease }}>{link.label}<ChevronRight size={20} /></motion.a>)}</nav><div className="mobile-menu__bars" aria-hidden="true"><i /><i /><i /><i /></div></motion.div>}</AnimatePresence>
+    <AnimatePresence>{open && <motion.div className="mobile-menu" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}><div className="mobile-menu__top"><a className="site-nav__brand" href="#top" onClick={() => setOpen(false)}><Image src="/brand/vnm-telecommunications-mark.png" alt="" width={29} height={29} /><span>VNM <b>TELECOM</b></span></a><button className="menu-trigger menu-trigger--close" type="button" onClick={() => { setOpen(false); triggerRef.current?.focus(); }} aria-label="Close navigation menu"><X size={24} /></button></div><nav aria-label="Mobile navigation">{links.map((link, index) => <motion.a key={link.href} href={link.href} onClick={() => setOpen(false)} initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: index * 0.05, ease }}>{link.label}<ChevronRight size={20} /></motion.a>)}</nav><div className="mobile-menu__bars" aria-hidden="true"><i /><i /><i /><i /></div></motion.div>}</AnimatePresence>
   </>;
 }
 
