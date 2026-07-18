@@ -1,0 +1,25 @@
+# VNM TELECOMMUNICATIONS LLP
+
+Premium B2B mobile device wholesale frontend built with standard Next.js App Router, JavaScript, CSS, Motion, and Lucide React.
+
+**HQ:** North Blocke-304/5/6 Sacred World Mall, Third floor, Above Kwality Restaurant, Near Jagtap Chowk, Wanowrie, Pune 411040  
+**Email:** Support@vnmtelecom.in  
+**Phone:** 9999999999
+
+## Local development
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+## Checks
+
+```bash
+npm run validate:assets
+npm run lint
+npm run build
+```
+
+All product artwork, brand marks, textures, icons, and preview imagery are local assets. Stock data and quote submission are frontend-only demonstrations until approved backend integrations are authorized.

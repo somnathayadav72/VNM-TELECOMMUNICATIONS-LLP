@@ -1,0 +1,15 @@
+export const site = {
+  name: "VNM Telecommunications",
+  legalName: "VNM TELECOMMUNICATIONS LLP",
+  tagline: "Verified devices. Ready for resale.",
+  description: "A B2B wholesale supplier of new and certified refurbished mobile devices, shipped worldwide.",
+  email: "Support@vnmtelecom.in",
+  phone: "9999999999",
+  whatsapp: "9999999999",
+  address: "North Blocke-304/5/6 Sacred World Mall, Third floor, Above Kwality Restaurant, Near Jagtap Chowk, Wanowrie, Pune 411040",
+  founded: "1999",
+  countriesServed: "60+",
+  annualUnits: "500K+",
+  dispatchTime: "48h",
+  url: "https://vnmtelecom.in",
+};
