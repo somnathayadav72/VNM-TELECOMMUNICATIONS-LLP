@@ -1,10 +1,10 @@
 # VNM TELECOMMUNICATIONS LLP
 
-Premium B2B mobile device wholesale frontend built with standard Next.js App Router, JavaScript, CSS, Motion, and Lucide React.
+Pune-based B2B wholesale and merchant-export frontend for smartphones and consumer electronics—built with Next.js App Router, JavaScript, CSS, Motion, and Lucide React.
 
 **HQ:** North Blocke-304/5/6 Sacred World Mall, Third floor, Above Kwality Restaurant, Near Jagtap Chowk, Wanowrie, Pune 411040  
 **Email:** Support@vnmtelecom.in  
-**Phone:** 9999999999
+**Phone:** +91 9999999999
 
 ## Local development
 
