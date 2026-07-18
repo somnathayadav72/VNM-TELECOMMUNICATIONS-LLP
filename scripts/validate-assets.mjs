@@ -5,6 +5,7 @@ const root = process.cwd();
 const required = [
   "public/brand/vnm-telecommunications-mark.svg",
   "public/brand/vnm-telecommunications-mark.png",
+  "public/brand/vnm-telecommunications-mark-on-dark.svg",
   "public/brand/vnm-telecommunications-wordmark.svg",
   "public/brand/vnm-telecommunications-lockup-dark.svg",
   "public/brand/vnm-telecommunications-lockup-light.svg",

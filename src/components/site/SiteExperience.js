@@ -1,14 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useMotionValue, useMotionValueEvent, useScroll, useSpring, useTransform } from "motion/react";
-import { ArrowUpRight, BadgeCheck, Boxes, Check, ChevronRight, Globe2, Mail, MapPin, Menu, MessageCircle, Package, Phone, ScanLine, ShieldCheck, Truck, X } from "lucide-react";
+import { ArrowUpRight, BadgeCheck, Boxes, Check, ChevronRight, Globe2, Mail, MapPin, Menu, MessageCircle, Package, Phone, ShieldCheck, Truck, X } from "lucide-react";
 import { site } from "@/config/site";
 import { categories } from "@/data/categories";
 import { devices } from "@/data/devices";
 import { grades } from "@/data/grades";
-import { stockPreview } from "@/data/stockPreview";
 import { isValidEmail } from "@/lib/validation";
 
 const ease = [0.16, 1, 0.3, 1];
@@ -27,7 +26,17 @@ function SectionIntro({ eyebrow, title, copy, dark = false }) {
 }
 
 function BrandLockup({ dark = false }) {
-  return <div className="brand-lockup"><Image src={dark ? "/brand/vnm-telecommunications-mark.png" : "/brand/vnm-telecommunications-lockup-dark.svg"} alt={site.name} width={dark ? 30 : 220} height={dark ? 30 : 32} className={dark ? "brand-lockup__mark" : "brand-lockup__wide"} /></div>;
+  return (
+    <div className={`brand-lockup ${dark ? "brand-lockup--on-dark" : ""}`}>
+      <Image
+        src={dark ? "/brand/vnm-telecommunications-lockup-light.svg" : "/brand/vnm-telecommunications-lockup-dark.svg"}
+        alt={site.name}
+        width={240}
+        height={40}
+        className="brand-lockup__wide"
+      />
+    </div>
+  );
 }
 
 function Navbar() {
@@ -49,15 +58,15 @@ function Navbar() {
     document.addEventListener("keydown", onKey);
     return () => { document.body.style.overflow = ""; document.removeEventListener("keydown", onKey); };
   }, [open]);
-  const links = [{ label: "Stock", href: "#stock" }, { label: "Categories", href: "#categories" }, { label: "Grading", href: "#grading" }, { label: "Logistics", href: "#logistics" }, { label: "Business", href: "#company" }];
+  const links = [{ label: "Categories", href: "#categories" }, { label: "Grading", href: "#grading" }, { label: "Logistics", href: "#logistics" }, { label: "Business", href: "#company" }];
   return <>
     <header className={`site-nav ${scrolled ? "site-nav--scrolled" : ""}`}>
-      <a className="site-nav__brand" href="#top" aria-label="VNM Telecommunications home"><Image src="/brand/vnm-telecommunications-mark.png" alt="" width={29} height={29} /><span>VNM <b>TELECOM</b></span></a>
+      <a className="site-nav__brand" href="#top" aria-label="VNM Telecommunications home"><Image src="/brand/vnm-telecommunications-mark.png" alt="" width={29} height={29} /><span>VNM <b>TELECOMMUNICATIONS</b></span></a>
       <nav className="site-nav__links" aria-label="Primary navigation">{links.map((link) => <a key={link.href} href={link.href}>{link.label}</a>)}</nav>
       <a className="button button--nav" href="#contact">Request stock list <ArrowUpRight size={15} /></a>
       <button ref={triggerRef} className="menu-trigger" type="button" onClick={() => setOpen(true)} aria-label="Open navigation menu" aria-expanded={open}><Menu size={21} /></button>
     </header>
-    <AnimatePresence>{open && <motion.div className="mobile-menu" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}><div className="mobile-menu__top"><a className="site-nav__brand" href="#top" onClick={() => setOpen(false)}><Image src="/brand/vnm-telecommunications-mark.png" alt="" width={29} height={29} /><span>VNM <b>TELECOM</b></span></a><button className="menu-trigger menu-trigger--close" type="button" onClick={() => { setOpen(false); triggerRef.current?.focus(); }} aria-label="Close navigation menu"><X size={24} /></button></div><nav aria-label="Mobile navigation">{links.map((link, index) => <motion.a key={link.href} href={link.href} onClick={() => setOpen(false)} initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: index * 0.05, ease }}>{link.label}<ChevronRight size={20} /></motion.a>)}</nav><div className="mobile-menu__bars" aria-hidden="true"><i /><i /><i /><i /></div></motion.div>}</AnimatePresence>
+    <AnimatePresence>{open && <motion.div className="mobile-menu" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}><div className="mobile-menu__top"><a className="site-nav__brand" href="#top" onClick={() => setOpen(false)}><Image src="/brand/vnm-telecommunications-mark.png" alt="" width={29} height={29} /><span>VNM <b>TELECOMMUNICATIONS</b></span></a><button className="menu-trigger menu-trigger--close" type="button" onClick={() => { setOpen(false); triggerRef.current?.focus(); }} aria-label="Close navigation menu"><X size={24} /></button></div><nav aria-label="Mobile navigation">{links.map((link, index) => <motion.a key={link.href} href={link.href} onClick={() => setOpen(false)} initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: index * 0.05, ease }}>{link.label}<ChevronRight size={20} /></motion.a>)}</nav><div className="mobile-menu__bars" aria-hidden="true"><i /><i /><i /><i /></div></motion.div>}</AnimatePresence>
   </>;
 }
 
@@ -163,18 +172,6 @@ function usePrefersReducedMotion() {
   return reduced;
 }
 
-function GradeBadge({ grade }) {
-  const item = grades.find((entry) => entry.label === grade);
-  return <span className="grade-badge" style={{ "--grade-color": item?.color || "#eaf0ff" }}>{grade}</span>;
-}
-
-function StockPreview({ onRequest }) {
-  const [filter, setFilter] = useState("All");
-  const filters = ["All", "New", "A+", "A", "B", "Smartphones", "Tablets", "Wearables"];
-  const rows = useMemo(() => stockPreview.filter((row) => filter === "All" || row.grade === filter || row.filterCategory === filter), [filter]);
-  return <section className="section section--dark stock" id="stock"><div className="wrap"><SectionIntro dark eyebrow="STOCK PREVIEW · SAMPLE INVENTORY" title="A clearer way to evaluate inventory." copy="A frontend demonstration of the fields a future approved stock feed can provide. Every row is fictional until connected to your source of truth." /><div className="filter-bar" role="group" aria-label="Filter sample inventory">{filters.map((item) => <button key={item} type="button" className={filter === item ? "is-active" : ""} onClick={() => setFilter(item)} aria-pressed={filter === item}>{item}</button>)}</div><div className="stock-board"><div className="stock-head"><span>Product</span><span>Category</span><span>Grade</span><span>Region</span><span>Quantity</span><span>Dispatch</span><span /></div><AnimatePresence mode="popLayout">{rows.map((row) => <motion.div className="stock-row" key={row.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}><div className="stock-product"><i /><strong>{row.product}</strong><small>{row.code}</small></div><span data-label="Category">{row.category}</span><span data-label="Grade"><GradeBadge grade={row.grade} /></span><span data-label="Region">{row.region}</span><strong className="stock-quantity" data-label="Quantity">{row.quantity}</strong><span data-label="Dispatch">{row.dispatch}</span><button className="row-action" type="button" onClick={() => onRequest(`${row.product} · ${row.grade}`)}>Request this stock <ArrowUpRight size={15} /></button></motion.div>)}</AnimatePresence></div><p className="stock-note">Sample data only · connect approved stock data before publishing. <a href="#contact">Talk to sales <ArrowUpRight size={14} /></a></p></div></section>;
-}
-
 function GradingSection() {
   const [active, setActive] = useState(0);
   const grade = grades[active];
@@ -203,33 +200,178 @@ function QualityControl() {
 
 function Logistics() {
   const facts = ["Pune hub / Maharashtra", "Dispatch to every Indian state & UT", "Consolidated B2B shipments", "GST-ready documentation", "Outside India on request"];
-  const routes = [{ id: "delhi", label: "Delhi NCR", x: 186, y: 210, path: "M198 430 C186 357 178 270 186 210", delay: 0 }, { id: "ahmedabad", label: "Ahmedabad", x: 92, y: 370, path: "M198 430 C163 413 124 391 92 370", delay: .2 }, { id: "hyderabad", label: "Hyderabad", x: 237, y: 456, path: "M198 430 C211 438 225 448 237 456", delay: .4 }, { id: "bengaluru", label: "Bengaluru", x: 198, y: 535, path: "M198 430 C185 462 192 505 198 535", delay: .6 }, { id: "chennai", label: "Chennai", x: 242, y: 610, path: "M198 430 C217 484 237 553 242 610", delay: .8 }, { id: "kolkata", label: "Kolkata", x: 446, y: 345, path: "M198 430 C276 414 371 369 446 345", delay: 1 }, { id: "guwahati", label: "Guwahati", x: 517, y: 271, path: "M198 430 C310 396 425 315 517 271", delay: 1.2 }];
-  return <section className="section section--dark logistics" id="logistics"><div className="wrap"><SectionIntro dark eyebrow="INDIA DISTRIBUTION & EXPORT" title="Stock moves. Visibility stays." copy="From our Pune hub across India for domestic B2B supply—with packing, shipping and documentation support when orders move into export markets." /><div className="logistics__grid"><div className="route-map"><div className="india-map"><svg viewBox="-80 -42 840 780" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Animated routes from Pune to Indian regional hubs"><image className="india-map__land" href="/maps/india-states.svg" x="0" y="0" width="612" height="696" preserveAspectRatio="xMidYMid meet" />{routes.map((route) => <path key={route.id} className={`india-map__route india-map__route--${route.id}`} d={route.path} style={{ animationDelay: `${route.delay}s` }} />)}<circle className="india-map__hub-pulse" cx="198" cy="430" r="13" /><circle className="india-map__hub" cx="198" cy="430" r="6" />{routes.map((route) => <g key={route.id} className="india-map__node"><circle cx={route.x} cy={route.y} r="5" /><text x={route.x + 10} y={route.y + 4}>{route.label}</text></g>)}<text className="india-map__pune" x="212" y="424">PUNE HUB</text><path className="india-map__outside-route" d="M517 271 C592 228 653 169 725 108" /><text className="india-map__outside" x="596" y="95">OUTSIDE INDIA</text></svg></div><div className="route-map__status"><span className="route-map__status-dot" /> LIVE ROUTE STUDY / PUNE → INDIA</div></div><div className="logistics__facts"><p className="eyebrow eyebrow--light">PUNE DISTRIBUTION HUB</p>{facts.map((fact) => <div key={fact}><ShieldCheck size={17} /><span>{fact}</span></div>)}<p className="logistics__carriers">NORTH · SOUTH · EAST · WEST · EXPORT</p></div><div className="shipment-card"><AssetImage src="/images/devices/packed-shipment.webp" fallback="/generated/devices/packed-shipment.svg" alt="Unbranded mobile devices packed for wholesale dispatch" sizes="(max-width: 768px) 90vw, 36vw" /><span>DISPATCH UNIT / PUNE—048</span></div></div></div></section>;
+  // Coordinates mapped to india-states.svg (612×696) from real lat/lon.
+  const hub = { x: 122, y: 426 };
+  const routes = [
+    { id: "delhi", label: "Delhi NCR", x: 191, y: 198, labelX: 201, labelY: 194, path: `M${hub.x} ${hub.y} C140 340 160 250 191 198`, delay: 0 },
+    { id: "ahmedabad", label: "Ahmedabad", x: 95, y: 322, labelX: 105, labelY: 318, path: `M${hub.x} ${hub.y} C110 390 100 350 95 322`, delay: 0.2 },
+    { id: "hyderabad", label: "Hyderabad", x: 218, y: 452, labelX: 228, labelY: 448, path: `M${hub.x} ${hub.y} C160 440 190 448 218 452`, delay: 0.4 },
+    { id: "bengaluru", label: "Bengaluru", x: 199, y: 551, labelX: 209, labelY: 547, path: `M${hub.x} ${hub.y} C150 480 175 520 199 551`, delay: 0.6 },
+    { id: "chennai", label: "Chennai", x: 255, y: 548, labelX: 265, labelY: 544, path: `M${hub.x} ${hub.y} C170 470 220 520 255 548`, delay: 0.8 },
+    { id: "kolkata", label: "Kolkata", x: 422, y: 335, labelX: 432, labelY: 331, path: `M${hub.x} ${hub.y} C220 400 330 360 422 335`, delay: 1 },
+    { id: "guwahati", label: "Guwahati", x: 492, y: 255, labelX: 502, labelY: 251, path: `M${hub.x} ${hub.y} C260 360 390 290 492 255`, delay: 1.2 },
+  ];
+  return (
+    <section className="section section--dark logistics" id="logistics">
+      <div className="wrap">
+        <SectionIntro dark eyebrow="INDIA DISTRIBUTION & EXPORT" title="Stock moves. Visibility stays." copy="From our Pune hub across India for domestic B2B supply—with packing, shipping and documentation support when orders move into export markets." />
+        <div className="logistics__grid">
+          <div className="route-map">
+            <div className="india-map">
+              <svg viewBox="-60 -20 820 740" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Animated routes from Pune to Indian regional hubs">
+                <image className="india-map__land" href="/maps/india-states.svg" x="0" y="0" width="612" height="696" preserveAspectRatio="xMidYMid meet" />
+                {routes.map((route) => <path key={route.id} className={`india-map__route india-map__route--${route.id}`} d={route.path} style={{ animationDelay: `${route.delay}s` }} />)}
+                <circle className="india-map__hub-pulse" cx={hub.x} cy={hub.y} r="13" />
+                <circle className="india-map__hub" cx={hub.x} cy={hub.y} r="6" />
+                {routes.map((route) => (
+                  <g key={route.id} className="india-map__node">
+                    <circle cx={route.x} cy={route.y} r="5" />
+                    <text x={route.labelX} y={route.labelY}>{route.label}</text>
+                  </g>
+                ))}
+                <text className="india-map__pune" x={hub.x + 14} y={hub.y - 8}>PUNE HUB</text>
+                <path className="india-map__outside-route" d="M492 255 C560 210 640 150 720 100" />
+                <text className="india-map__outside" x="580" y="90">OUTSIDE INDIA</text>
+              </svg>
+            </div>
+            <div className="route-map__status"><span className="route-map__status-dot" /> LIVE ROUTE STUDY / PUNE → INDIA</div>
+          </div>
+          <div className="logistics__facts">
+            <p className="eyebrow eyebrow--light">PUNE DISTRIBUTION HUB</p>
+            {facts.map((fact) => <div key={fact}><ShieldCheck size={17} /><span>{fact}</span></div>)}
+            <p className="logistics__carriers">NORTH · SOUTH · EAST · WEST · EXPORT</p>
+          </div>
+          <div className="shipment-card">
+            <AssetImage src="/images/devices/packed-shipment.webp" fallback="/generated/devices/packed-shipment.svg" alt="Unbranded mobile devices packed for wholesale dispatch" sizes="(max-width: 768px) 90vw, 36vw" />
+            <span>DISPATCH UNIT / PUNE—048</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 function BigReveal() {
   return <section className="big-reveal"><div className="big-reveal__image"><AssetImage src="/images/devices/warehouse-device-wall.webp" fallback="/generated/devices/warehouse-device-wall.svg" alt="Fictional organized wholesale device warehouse" sizes="100vw" /></div><div className="big-reveal__overlay" /><div className="wrap big-reveal__content"><p className="eyebrow eyebrow--light">SERVING TRADE PARTNERS IN {site.countriesServed} COUNTRIES</p><h2>EXPANDING<br />HORIZONS.<br /><span>STEADY SUPPLY.</span></h2><p>Clear grades. Competitive volumes. Tracked dispatch from Pune.</p></div></section>;
 }
 
-function QuoteForm({ initialInterest = "" }) {
-  const [values, setValues] = useState(() => ({ company: "", email: "", country: "", category: "", grade: "", quantity: "", requirements: initialInterest ? `Interested in ${initialInterest}.` : "" }));
+function QuoteForm() {
+  const empty = { company: "", email: "", state: "", category: "", quantity: "", requirements: "" };
+  const [values, setValues] = useState(() => ({ ...empty }));
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const statusRef = useRef(null);
-  const update = (event) => { const { name, value } = event.target; setValues((current) => ({ ...current, [name]: value })); setErrors((current) => ({ ...current, [name]: "" })); };
-  const submit = (event) => {
+
+  const update = (event) => {
+    const { name, value } = event.target;
+    setValues((current) => ({ ...current, [name]: value }));
+    setErrors((current) => ({ ...current, [name]: "" }));
+    setSubmitError("");
+  };
+
+  const submit = async (event) => {
     event.preventDefault();
     const next = {};
     if (!values.company.trim()) next.company = "Add your company name.";
     if (!isValidEmail(values.email)) next.email = "Enter a valid business email.";
-    if (!values.country.trim()) next.country = "Add your country.";
+    if (!values.state.trim()) next.state = "Add your state.";
     if (!values.category) next.category = "Choose a product category.";
     if (!values.quantity.trim()) next.quantity = "Add an estimated quantity.";
-    if (Object.keys(next).length) { setErrors(next); const first = Object.keys(next)[0]; document.querySelector(`[name="${first}"]`)?.focus(); return; }
-    // Connect an approved CRM or sales endpoint here when backend integration is authorized.
-    setSubmitted(true); window.setTimeout(() => statusRef.current?.focus(), 30);
+    if (Object.keys(next).length) {
+      setErrors(next);
+      document.querySelector(`[name="${Object.keys(next)[0]}"]`)?.focus();
+      return;
+    }
+
+    setSubmitting(true);
+    setSubmitError("");
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        if (data.errors) setErrors(data.errors);
+        throw new Error(data.error || "Unable to send your request. Please try again or email us directly.");
+      }
+
+      const subject = encodeURIComponent(`Stock request — ${values.company.trim()}`);
+      const body = encodeURIComponent(
+        [
+          `Company: ${values.company.trim()}`,
+          `Email: ${values.email.trim()}`,
+          `State: ${values.state.trim()}`,
+          `Category: ${values.category}`,
+          `Quantity: ${values.quantity.trim()}`,
+          "",
+          "Requirements:",
+          values.requirements.trim() || "—",
+        ].join("\n"),
+      );
+      window.location.href = `mailto:${site.email}?subject=${subject}&body=${body}`;
+
+      setSubmitted(true);
+      window.setTimeout(() => statusRef.current?.focus(), 30);
+    } catch (error) {
+      setSubmitError(error.message || "Unable to send your request right now.");
+    } finally {
+      setSubmitting(false);
+    }
   };
-  return <section className="section quote" id="contact"><div className="wrap quote__grid"><div className="quote__intro"><p className="eyebrow">REQUEST STOCK</p><h2>Tell us what your market needs.</h2><p>Share categories, models, grades and quantities for India distribution or export. This frontend demo confirms your request locally.</p><div className="contact-details"><a href={`mailto:${site.email}`}><Mail size={17} />{site.email}</a><a href={`tel:+91${site.phone}`}><Phone size={17} />+91 {site.phone}</a><a href={`https://wa.me/91${site.whatsapp.replace(/\D/g, "")}`}><MessageCircle size={17} />WhatsApp</a><span><MapPin size={17} />{site.address}</span></div></div><div className="quote__form-wrap">{submitted ? <div className="success-state" ref={statusRef} tabIndex={-1} role="status"><span><Check size={24} /></span><p className="eyebrow">REQUEST PREPARED</p><h3>A clear next step for your buying team.</h3><p>A sales representative would normally respond within one business day.</p><button className="button button--dark" type="button" onClick={() => { setSubmitted(false); setValues({ company: "", email: "", country: "", category: "", grade: "", quantity: "", requirements: "" }); }}>Prepare another request <ArrowUpRight size={15} /></button></div> : <form className="quote-form" onSubmit={submit} noValidate><div className="form-heading"><p className="eyebrow">LOCAL DEMO FORM</p><span>All fields marked * are required.</span></div><div className="form-grid"><label>Company name *<input name="company" value={values.company} onChange={update} aria-invalid={Boolean(errors.company)} />{errors.company && <small>{errors.company}</small>}</label><label>Business email *<input name="email" type="email" value={values.email} onChange={update} aria-invalid={Boolean(errors.email)} />{errors.email && <small>{errors.email}</small>}</label><label>Country *<input name="country" value={values.country} onChange={update} aria-invalid={Boolean(errors.country)} />{errors.country && <small>{errors.country}</small>}</label><label>Product category *<select name="category" value={values.category} onChange={update} aria-invalid={Boolean(errors.category)}><option value="">Select a category</option>{categories.map((category) => <option key={category.id} value={category.name}>{category.name}</option>)}</select>{errors.category && <small>{errors.category}</small>}</label><label>Preferred grade<select name="grade" value={values.grade} onChange={update}><option value="">Any grade</option>{grades.map((grade) => <option key={grade.id} value={grade.label}>{grade.label}</option>)}</select></label><label>Estimated quantity *<input name="quantity" value={values.quantity} onChange={update} placeholder="e.g. 1,000 units" aria-invalid={Boolean(errors.quantity)} />{errors.quantity && <small>{errors.quantity}</small>}</label><label className="form-grid__wide">Requirements<textarea name="requirements" rows="4" value={values.requirements} onChange={update} placeholder="Models, regions, timing, documentation…" /></label></div><button className="button button--dark" type="submit">Prepare stock request <ArrowUpRight size={16} /></button></form>}</div></div></section>;
+
+  return (
+    <section className="section quote" id="contact">
+      <div className="wrap quote__grid">
+        <div className="quote__intro">
+          <p className="eyebrow">REQUEST STOCK</p>
+          <h2>Tell us what your market needs.</h2>
+          <p>Share categories, models and quantities for India distribution or export. Our sales team will respond within one business day.</p>
+          <div className="contact-details">
+            <a href={`mailto:${site.email}`}><Mail size={17} />{site.email}</a>
+            <a href={`tel:+91${site.phone}`}><Phone size={17} />+91 {site.phone}</a>
+            <a href={`https://wa.me/91${site.whatsapp.replace(/\D/g, "")}`}><MessageCircle size={17} />WhatsApp</a>
+            <span><MapPin size={17} />{site.address}</span>
+          </div>
+        </div>
+        <div className="quote__form-wrap">
+          {submitted ? (
+            <div className="success-state" ref={statusRef} tabIndex={-1} role="status">
+              <span><Check size={24} /></span>
+              <p className="eyebrow">REQUEST SENT</p>
+              <h3>Thank you. We have received your enquiry.</h3>
+              <p>A sales representative will respond within one business day. You can also reach us directly at {site.email}.</p>
+              <button className="button button--dark" type="button" onClick={() => { setSubmitted(false); setValues({ ...empty }); }}>
+                Send another request <ArrowUpRight size={15} />
+              </button>
+            </div>
+          ) : (
+            <form className="quote-form" onSubmit={submit} noValidate>
+              <div className="form-heading">
+                <p className="eyebrow">STOCK ENQUIRY</p>
+                <span>All fields marked * are required.</span>
+              </div>
+              <div className="form-grid">
+                <label>Company name *<input name="company" value={values.company} onChange={update} autoComplete="organization" aria-invalid={Boolean(errors.company)} />{errors.company && <small>{errors.company}</small>}</label>
+                <label>Business email *<input name="email" type="email" value={values.email} onChange={update} autoComplete="email" aria-invalid={Boolean(errors.email)} />{errors.email && <small>{errors.email}</small>}</label>
+                <label>State *<input name="state" value={values.state} onChange={update} placeholder="e.g. Maharashtra" autoComplete="address-level1" aria-invalid={Boolean(errors.state)} />{errors.state && <small>{errors.state}</small>}</label>
+                <label>Product category *<select name="category" value={values.category} onChange={update} aria-invalid={Boolean(errors.category)}><option value="">Select a category</option>{categories.map((category) => <option key={category.id} value={category.name}>{category.name}</option>)}</select>{errors.category && <small>{errors.category}</small>}</label>
+                <label>Estimated quantity *<input name="quantity" value={values.quantity} onChange={update} placeholder="e.g. 1,000 units" aria-invalid={Boolean(errors.quantity)} />{errors.quantity && <small>{errors.quantity}</small>}</label>
+                <label className="form-grid__wide">Requirements<textarea name="requirements" rows="4" value={values.requirements} onChange={update} placeholder="Models, timing, documentation…" /></label>
+              </div>
+              {submitError && <p className="form-error" role="alert">{submitError}</p>}
+              <button className="button button--dark" type="submit" disabled={submitting}>
+                {submitting ? "Sending request…" : <>Send stock request <ArrowUpRight size={16} /></>}
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    </section>
+  );
 }
 
 function Footer() {
@@ -243,7 +385,5 @@ function ScrollProgress() {
 }
 
 export default function SiteExperience() {
-  const [interest, setInterest] = useState("");
-  const requestStock = (value) => { setInterest(value); document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" }); };
-  return <><div className="site-noise" aria-hidden="true" /><ScrollProgress /><Navbar /><main><Hero /><TrustMarquee /><Stats /><CategoryGrid /><ScrollDeviceStory /><StockPreview onRequest={requestStock} /><GradingSection /><Services /><Process /><QualityControl /><Logistics /><BigReveal /><QuoteForm key={interest || "empty"} initialInterest={interest} /></main><Footer /></>;
+  return <><div className="site-noise" aria-hidden="true" /><ScrollProgress /><Navbar /><main><Hero /><TrustMarquee /><Stats /><CategoryGrid /><ScrollDeviceStory /><GradingSection /><Services /><Process /><QualityControl /><Logistics /><BigReveal /><QuoteForm /></main><Footer /></>;
 }

@@ -22,4 +22,4 @@ npm run lint
 npm run build
 ```
 
-All product artwork, brand marks, textures, icons, and preview imagery are local assets. Stock data and quote submission are frontend-only demonstrations until approved backend integrations are authorized.
+All product artwork, brand marks, textures, icons, and preview imagery are local assets. Stock enquiries post to `/api/contact` and open a mailto draft to Support@vnmtelecom.in.

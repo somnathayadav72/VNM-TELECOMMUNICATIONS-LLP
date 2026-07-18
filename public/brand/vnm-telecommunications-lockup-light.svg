@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 74" role="img" aria-label="VNM Telecommunications">
   <g transform="translate(0 2) scale(0.14)">
-    <polygon fill="#5a5a5a" points="72,387 178,188 249,318"/>
-    <polygon fill="#C4BABC" points="429,391 322,188 249,318"/>
+    <polygon fill="#B8B8B8" points="72,387 178,188 249,318"/>
+    <polygon fill="#E8E0E1" points="429,391 322,188 249,318"/>
     <polygon fill="#EC3236" points="157,114 249,282 342,114 249,228"/>
   </g>
   <text x="82" y="34" fill="#f8faff" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" letter-spacing="2">VNM</text>
-  <text x="82" y="56" fill="#a5adba" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">TELECOMMUNICATIONS LLP</text>
+  <text x="82" y="56" fill="#c5ccd6" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">TELECOMMUNICATIONS LLP</text>
 </svg>
