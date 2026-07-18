@@ -73,14 +73,6 @@ function Navbar() {
 function Hero() {
   const { scrollY } = useScroll();
   const reduceMotion = usePrefersReducedMotion();
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const query = window.matchMedia("(max-width: 768px)");
-    const update = () => setIsMobile(query.matches);
-    update();
-    query.addEventListener?.("change", update);
-    return () => query.removeEventListener?.("change", update);
-  }, []);
   const visualScale = useTransform(scrollY, [0, 680], [1, .84]);
   const visualY = useTransform(scrollY, [0, 680], [0, 90]);
   const copyOpacity = useTransform(scrollY, [0, 440], [1, .1]);
@@ -88,27 +80,24 @@ function Hero() {
   const pointerX = useSpring(useMotionValue(0), { stiffness: 120, damping: 24, mass: .25 });
   const pointerY = useSpring(useMotionValue(0), { stiffness: 120, damping: 24, mass: .25 });
   const movePointer = (event) => {
-    if (reduceMotion || isMobile || event.pointerType !== "mouse") return;
+    if (reduceMotion || event.pointerType !== "mouse") return;
     const bounds = event.currentTarget.getBoundingClientRect();
     pointerX.set((event.clientX - bounds.left - bounds.width / 2) * .018);
     pointerY.set((event.clientY - bounds.top - bounds.height / 2) * .018);
   };
   const resetPointer = () => { pointerX.set(0); pointerY.set(0); };
-  const copyMotion = isMobile || reduceMotion ? undefined : { opacity: copyOpacity, y: copyY };
-  const visualMotion = isMobile || reduceMotion ? undefined : { scale: visualScale, y: visualY };
   return (
     <section className="hero" id="top" onPointerMove={movePointer} onPointerLeave={resetPointer}>
       <div className="hero__grid" aria-hidden="true" />
       <div className="hero__halo" aria-hidden="true" />
       <div className="wrap hero__inner">
-        <motion.div className="hero__copy" style={copyMotion}>
+        <motion.div className="hero__copy" style={reduceMotion ? undefined : { opacity: copyOpacity, y: copyY }}>
           <p className="eyebrow">INDIAN MERCHANT EXPORTER · PUNE</p>
           <h1>
             <span className="hero__line hero__line--one">SMARTPHONES</span>
-            <span className="hero__line hero__line--two">&amp;</span>
-            <span className="hero__line hero__line--three">ELECTRONICS.</span>
-            <span className="hero__line hero__line--four">BUILT FOR</span>
-            <span className="hero__line hero__line--five">TRADE.</span>
+            <span className="hero__line hero__line--two">&amp; ELECTRONICS.</span>
+            <span className="hero__line hero__line--three">BUILT FOR</span>
+            <span className="hero__line hero__line--four">TRADE.</span>
           </h1>
           <p className="hero__body">New and certified refurbished smartphones, tablets, wearables and accessories—sourced for distributors, wholesalers and bulk traders across India and export markets.</p>
           <div className="hero__actions">
@@ -116,9 +105,9 @@ function Hero() {
             <a className="text-link" href="#contact">Request a quote <ArrowUpRight size={16} /></a>
           </div>
         </motion.div>
-        <motion.div className="hero__visual" style={visualMotion}>
+        <motion.div className="hero__visual" style={reduceMotion ? undefined : { scale: visualScale, y: visualY }}>
           <span className="hero__serial">VNM / PUNE · INDIA / 001</span>
-          <motion.div className="hero__device" style={isMobile ? undefined : { x: pointerX, y: pointerY }}>
+          <motion.div className="hero__device" style={{ x: pointerX, y: pointerY }}>
             <AssetImage src="/images/devices/hero-device-stack.webp" fallback="/generated/devices/hero-device-stack.svg" alt="Stack of smartphones, tablet, laptop and wearable devices" priority sizes="(max-width: 768px) 95vw, 58vw" />
           </motion.div>
           <div className="hero__measure"><span>01</span><i /><span>04</span></div>
