@@ -91,7 +91,7 @@ function Hero() {
       <div className="hero__grid" aria-hidden="true" />
       <div className="hero__halo" aria-hidden="true" />
       <div className="wrap hero__inner">
-        <motion.div className="hero__copy" style={reduceMotion ? undefined : { opacity: copyOpacity, y: copyY }}>
+        <motion.div className="hero__copy" style={{ opacity: copyOpacity, y: copyY }}>
           <p className="eyebrow">INDIAN MERCHANT EXPORTER · PUNE</p>
           <h1>
             <span className="hero__line hero__line--one">SMARTPHONES</span>
@@ -105,7 +105,7 @@ function Hero() {
             <a className="text-link" href="#contact">Request a quote <ArrowUpRight size={16} /></a>
           </div>
         </motion.div>
-        <motion.div className="hero__visual" style={reduceMotion ? undefined : { scale: visualScale, y: visualY }}>
+        <motion.div className="hero__visual" style={{ scale: visualScale, y: visualY }}>
           <span className="hero__serial">VNM / PUNE · INDIA / 001</span>
           <motion.div className="hero__device" style={{ x: pointerX, y: pointerY }}>
             <AssetImage src="/images/devices/hero-device-stack.webp" fallback="/generated/devices/hero-device-stack.svg" alt="Stack of smartphones, tablet, laptop and wearable devices" priority sizes="(max-width: 768px) 95vw, 58vw" />
